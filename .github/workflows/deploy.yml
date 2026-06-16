@@ -15,27 +15,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          lfs: true
+          fetch-depth: 1 # On ne récupère que le tout dernier commit pour aller vite
 
       - name: Push to Hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # 1. Configuration de l'identité Git
+          # 1. Nettoyage agressif des fichiers lourds s'ils existent dans le runner
+          rm -f yolo11s-pose.pt model_weights.pt
+          
+          # 2. Réinitialisation d'un Git propre et isolé dans le runner (sans historique lourd)
+          rm -rf .git
+          git init
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           
-          # 2. SUPPRESSION DU FICHIER LOURD AVANT LE PUSH
-          # On le supprime et on valide cette suppression localement pour le runner
-          rm -f yolo11s-pose.pt
-          git rm --cached model_weights.pt || true
-          rm -f model_weights.pt
-          git rm --cached yolo11s-pose.pt || true
-          git commit -m "Temp: Suppression du modele pour le déploiement" || true
+          # 3. On ajoute uniquement les fichiers actuels conformes
+          git checkout -b main
+          git add .
+          git commit -m "Deploy: Production build clean"
           
-          # 3. Ajout du dépôt distant Hugging Face
-          git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 || true
-          
-          # 4. Push vers Hugging Face
+          # 4. Push écrasant vers Hugging Face
+          git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2
           git push --force https://token:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
