@@ -26,11 +26,16 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           
-          # 2. Initialisation et configuration essentielle de Git LFS pour le Push
-          git lfs install
+          # 2. SUPPRESSION DU FICHIER LOURD AVANT LE PUSH
+          # On le supprime et on valide cette suppression localement pour le runner
+          rm -f yolo11s-pose.pt
+          git rm --cached model_weights.pt || true
+          rm -f model_weights.pt
+          git rm --cached yolo11s-pose.pt || true
+          git commit -m "Temp: Suppression du modele pour le déploiement" || true
           
           # 3. Ajout du dépôt distant Hugging Face
           git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 || true
           
-          # 4. Push forcé (Git LFS interceptera automatiquement le fichier yolo11s-pose.pt)
+          # 4. Push vers Hugging Face
           git push --force https://token:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
