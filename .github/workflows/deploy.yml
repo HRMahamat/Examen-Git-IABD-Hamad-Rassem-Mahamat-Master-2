@@ -5,7 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Force le runner à obtenir les droits d'écriture sur le contenu du dépôt
 permissions:
   contents: write
 
@@ -23,10 +22,12 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Configuration minimale pour éviter les blocages de l'agent Git
+          # 1. Configuration de l'identité Git pour le runner
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           
-          # Ajout du dépôt distant et push forcé via le token d'accès
+          # 2. Ajout du dépôt distant Hugging Face (le || true évite de planter si déjà existant)
           git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 || true
+          
+          # 3. Push forcé en utilisant "token" comme identifiant et le secret en mot de passe
           git push --force https://token:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
