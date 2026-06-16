@@ -3,7 +3,6 @@ name: Sync to Hugging Face Spaces
 on:
   push:
     branches: [main]
-
   workflow_dispatch:
 
 jobs:
@@ -17,8 +16,8 @@ jobs:
           lfs: true
 
       - name: Push to Hub
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2
-          git push --force https://token:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
+        uses: mikeal/huggingface-spaces@v2
+        with:
+          app-id: HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2
+          hf-token: ${{ secrets.HF_TOKEN }}
+          define-auth: true
