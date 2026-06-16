@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Force le runner à obtenir les droits d'écriture sur le contenu du dépôt
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,8 +20,13 @@ jobs:
           lfs: true
 
       - name: Push to Hub
-        uses: mikeal/huggingface-spaces@v2
-        with:
-          app-id: HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2
-          hf-token: ${{ secrets.HF_TOKEN }}
-          define-auth: true
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Configuration minimale pour éviter les blocages de l'agent Git
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          
+          # Ajout du dépôt distant et push forcé via le token d'accès
+          git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 || true
+          git push --force https://token:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
