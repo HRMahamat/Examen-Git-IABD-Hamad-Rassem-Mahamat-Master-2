@@ -1,0 +1,25 @@
+name: Sync to Hugging Face Spaces
+
+on:
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        # Remplissez avec votre nom d'utilisateur HF et le nom de votre Space créé à l'étape 2
+        run: |
+          git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2
+          git push --force https://HRM237_HF:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
