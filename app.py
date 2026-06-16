@@ -38,4 +38,4 @@ with gr.Blocks(css=custom_css, title="Session Normale 2 Master 2 IABD") as inter
             """)
             gr.Markdown("---")
 
-if __name__ == "__main__": interface.launch(show_api=False)
+if __name__ == "__main__": interface.launch()
