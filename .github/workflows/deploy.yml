@@ -22,4 +22,4 @@ jobs:
         # Remplissez avec votre nom d'utilisateur HF et le nom de votre Space créé à l'étape 2
         run: |
           git remote add space https://huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2
-          git push --force https://HRM237_HF:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
+          git push --force https://HRMahamat_HF:$HF_TOKEN@huggingface.co/spaces/HRM237/Examen-Git-IABD-Hamad-Rassem-Mahamat-Master-2 main
